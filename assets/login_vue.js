@@ -24,7 +24,7 @@ var login_ = {
     updateLoading(input) { this.loading = input; return this },
     updateLogout(input) { this.logout = input; return this },
     updateTokenUrl(input) { this.tokenUrl = input; return this },
-    getData() { console.log(Object.entries(this.data())) },
+    getData() { console.log(Object.entries(this.$data)) },
     update() {
       window.location.replace(updateUrl(headUrl, param))
     },
