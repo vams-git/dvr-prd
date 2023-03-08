@@ -22,9 +22,9 @@ var alert_ = {
       });
     },
     remove(id) {
-      var index = this.list.findIndex(
+      var index = this.datas.findIndex(
         function (e) { return e.id === id });
-      var removed = this.list.splice(index, 1)
+      var removed = this.datas.splice(index, 1)
       console.log(removed)
     }
   },
