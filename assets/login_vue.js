@@ -26,7 +26,13 @@ var login_ = {
     updateTokenUrl(input) { this.tokenUrl = input; return this },
     getData() { console.log(Object.entries(this.$data)) },
     update() {
-      window.location.replace(updateUrl(headUrl, param))
+      if (this.email.toLowerCase().match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/) == null) {
+        alert.add({
+          text: 'invalid email',
+          type: 'error'
+        })
+      }
+      else { window.location.replace(updateUrl(headUrl, param)) }
     },
     auth() {
       var url = this.tokenUrl;
