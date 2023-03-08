@@ -16,11 +16,12 @@
 </head>
 
 <body id="main_body" class="bg-light" style="display:none!important">
-  <div class="hstack gap-2 vh-100 vw-100">
-    <div id="login" class="m-auto">
+  <div id="login" class="hstack gap-2 vh-100 vw-100">
+    <div class="m-auto">
       <form v-if="new_login" class="card-body p-2">
         <div class="vstack gap-1 mb-5">
-          <img src="https://afiqrostam.github.io/vams-checklist/icon.png" class="m-auto mb-5 veolia-logo">
+          <img src="https://afiqrostam.github.io/vams-checklist/icon.png" class="mx-auto mb-2 veolia-logo">
+          <p class="mb-2 font-monospace lead">Daily Vehicle Report<br>(DVR)</p>
         </div>
         <div class="my-3">
           <input type="email" class="form-control text-center mw-300px" v-model="email" name="email" id="email"
