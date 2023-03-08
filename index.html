@@ -134,14 +134,14 @@
         }
         else { window.localStorage.clear() }
       }
-      
+
       console.log(store)
       if (param.email !== undefined && param.email !== null) {
         login.addNewLogin(false)
           .addUserId(param.email)
           .updateLoading(false);
-          console.log(store == null || store == undefined)
-          console.log(store)
+        console.log(store == null || store == undefined)
+        console.log(store)
 
         if (store == null || store == undefined) {
           var fetch_status = new Request(updateUrl(login_gas, param), {
@@ -165,12 +165,7 @@
               }
             })
         }
-        else{
-          
-          login.updateLogout(true)
-        }
-
-        ;
+        else { login.updateLogout(true) }
       }
     })();
   </script>
