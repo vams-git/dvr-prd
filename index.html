@@ -78,7 +78,7 @@
         <div v-if="loading" class="spinner-grow">
           <span class="visually-hidden">Loading...</span>
         </div>
-        <div v-else>
+        <div v-else v-if="!logout"> 
           <div class="my-3">
             <p type="email" class="text-center">{{email}}</p>
           </div>
@@ -135,13 +135,10 @@
         else { window.localStorage.clear() }
       }
 
-      console.log(store)
       if (param.email !== undefined && param.email !== null) {
         login.addNewLogin(false)
           .addUserId(param.email)
           .updateLoading(false);
-        console.log(store == null || store == undefined)
-        console.log(store)
 
         if (store == null || store == undefined) {
           var fetch_status = new Request(updateUrl(login_gas, param), {
