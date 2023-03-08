@@ -21,6 +21,43 @@
 </head>
 
 <body id="main_body" class="bg-light" style="display:none!important">
+  <div id="main_nav" class="container-fluid bg-secondary d-none bg-opacity-25 p-2  hstack gap-2 fixed-top">
+    <div class="ms-auto dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-menu-button-wide"></i>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a class="dropdown-item disabled d-none" href="#" id="openjobmodalbutton" data-bs-toggle="modal"
+            data-bs-target="#newPage">
+            <span class="hstack gap-2">
+              Open Faults&nbsp;
+              <span class="badge text-bg-dark" id="openjobmodalcount">&nbsp;</span>
+            </span>
+          </a>
+        </li>
+        <li>
+          <a class="dropdown-item disabled d-none" href="#" id="pastdvrmodalbutton" data-bs-toggle="modal"
+            data-bs-target="#newPage">
+            <span class="hstack gap-2">
+              Past DVR&nbsp;
+              <span class="badge text-bg-dark" id="pastdvrmodalcount">&nbsp;</span>
+            </span>
+          </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li id="main_logout">
+          <a class="dropdown-item disabled" href="#" id="pastdvrmodalbutton" data-bs-toggle="modal"
+            data-bs-target="#newPage">
+            <span class="hstack gap-2">
+              Past DVR&nbsp;
+              <span class="badge text-bg-dark" id="pastdvrmodalcount">&nbsp;</span>
+            </span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
   <div id="login" class="hstack gap-2 vh-100 vw-100">
     <div class="m-auto">
       <form v-if="new_login" class="card-body p-2">
@@ -118,12 +155,11 @@
                 access['expiration'] = data.text.expiresAt;
                 window.localStorage
                   .setItem('access', JSON.stringify(access));
-                login.updateLoading(false).updateLogout(true)
               }
             }
           })
-      }
-      else { login.updateLoading(false).updateLogout(true) }
+      }      
+      login.updateLoading(false).updateLogout(true)
     })();
   </script>
 </body>
