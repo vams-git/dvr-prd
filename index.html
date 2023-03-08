@@ -135,7 +135,7 @@
       if (param.email !== undefined && param.email !== null) {
         login.addNewLogin(false).addUserId(param.email)
       }
-      if (store == null || store == undefined) && param.email !== undefined) {
+      if ((store == null || store == undefined) && param.email !== undefined) {
         var fetch_status = new Request(updateUrl(login_gas, param), {
           redirect: "follow",
           method: 'POST',
