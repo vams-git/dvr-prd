@@ -1,1 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <title>VAMS Checklist</title>
+  <link rel="icon" href="https://afiqrostam.github.io/vams-checklist/icon.png" size="64x64" type="image/png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  <style>
+    .veolia-logo { max-width: 100px }
+    .mw-300px { min-width: 300px }
+  </style>
+</head>
+
+<body id="main_body" class="bg-light" style="display:none!important">
+  <div class="hstack gap-2 vh-100 vw-100">
+    <div id="login" class="m-auto">
+      <form v-if="new_login" class="card-body p-2">
+        <div class="vstack gap-1 mb-5">
+          <img src="https://afiqrostam.github.io/vams-checklist/icon.png" class="m-auto mb-5 veolia-logo">
+        </div>
+        <div class="my-3">
+          <input type="email" class="form-control text-center mw-300px" v-model="email" name="email" id="email"
+            placeholder="Enter your VAMS login to begin">
+        </div>
+        <div class="hstack mt-2"><button type="button" @click="update" class="m-auto btn btn-primary">login</button>
+        </div>
+      </form>
+      <div v-else class="card-body p-2">
+        <div v-if="loading" class="spinner-grow">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+        <div v-else>
+          <div class="my-3">
+            <p type="email" class="text-center">{{email}}</p>
+          </div>
+          <div class="hstack mt-2">
+            <button v-if="logout" type="button" @click="log_out" class="m-auto btn btn-primary">Logout</button>
+            <button v-else type="button" @click="auth" class="m-auto btn btn-primary">Authorize</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/vue@3.2.31/dist/vue.global.prod.js"></script>
+  <script src="/assets/login_vue.js"></script>
+  <script src="/assets/utils.js"></script>
+  <script>
+    
+    var param;
+    var gas = 'https://script.google.com/macros/s/AKfycbyxS-QxsOYTVyJXUh1R7i38sjxk1R4L8uMqfU5S2Yfc-u6HkTV_u1R7ZuWeIPcR7DvvgQ/exec';
+    var login = Vue.createApp(login_).mount('#login');
+    var store;
+    var headUrl = origin + window.location.pathname;
+
+    (function () {
+      var body = document.getElementById('main_body');
+      body.style.display = null;
+
+      var store = window.localStorage.getItem('access');
+      param = getAllUrlParams();
+      param['tenant'] = 'VEOLIA1_TST';
+      param['logout'] = 'false';
+      param['url'] = headUrl;
+
+      if (store !== null) {
+        store = JSON.parse(store);
+        if (new Date(store['expiration'] * 1000) > new Date()) {
+          delete store['expiration'];
+          if (store.email !== param.email || store.tenant !== param.tenant) {
+            window.location.replace(updateUrl(headUrl, store))
+          }
+        }
+        else { window.localStorage.clear() }
+      }
+      if (param.email !== undefined && param.email !== null) {
+        login.addNewLogin(false).addUserId(param.email)
+      }
+      if (store == null && param.email !== undefined) {
+        var fetch_status = new Request(updateUrl(gas, param), {
+          redirect: "follow",
+          method: 'POST',
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8",
+          },
+        });
+        fetch(fetch_status)
+          .then(function (response) { return response.json() })
+          .then(function (data) {
+            if (!data.status && data.text.tokenUrl !== undefined) {
+              login.updateLoading(false).updateTokenUrl(data.text.tokenUrl)
+            }
+            else {
+              if (data.status) {
+                var access = JSON.parse(JSON.stringify(param));
+                access['expiration'] = data.text.expiresAt;
+                window.localStorage
+                  .setItem('access', JSON.stringify(access));
+                login.updateLoading(false).updateLogout(true)
+              }
+            }
+          })
+      }
+      else { login.updateLoading(false).updateLogout(true) }
+    })();
+  </script>
+</body>
+
+</html>
