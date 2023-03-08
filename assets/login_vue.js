@@ -47,7 +47,7 @@ var login_ = {
     },
     auth() {
       var url = this.tokenUrl;
-      window.location.replace(encodeURI(url))
+      window.location.replace(url)
     },
     log_out() {
       this.loading = true;
