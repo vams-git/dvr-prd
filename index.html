@@ -45,7 +45,9 @@
             </span>
           </a>
         </li>
-        <li><hr class="dropdown-divider"></li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
         <li id="main_logout">
           <a class="dropdown-item disabled" href="#" id="pastdvrmodalbutton" data-bs-toggle="modal"
             data-bs-target="#newPage">
@@ -133,33 +135,34 @@
         else { window.localStorage.clear() }
       }
       if (param.email !== undefined && param.email !== null) {
-        login.addNewLogin(false).addUserId(param.email)
-      }
-      if ((store == null || store == undefined) && param.email !== undefined) {
-        var fetch_status = new Request(updateUrl(login_gas, param), {
-          redirect: "follow",
-          method: 'POST',
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8",
-          },
-        });
-        fetch(fetch_status)
-          .then(function (response) { return response.json() })
-          .then(function (data) {
-            if (!data.status && data.text.tokenUrl !== undefined) {
-              login.updateLoading(false).updateTokenUrl(data.text.tokenUrl)
-            }
-            else {
-              if (data.status) {
-                var access = JSON.parse(JSON.stringify(param));
-                access['expiration'] = data.text.expiresAt;
-                window.localStorage
-                  .setItem('access', JSON.stringify(access));
+        login.addNewLogin(false)
+          .addUserId(param.email)
+          .updateLoading(false);
+
+        if (store == null || store == undefined) {
+          var fetch_status = new Request(updateUrl(login_gas, param), {
+            redirect: "follow",
+            method: 'POST',
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+          });
+          fetch(fetch_status)
+            .then(function (response) { return response.json() })
+            .then(function (data) {
+              if (!data.status && data.text.tokenUrl !== undefined) {
+                login.updateLoading(false).updateTokenUrl(data.text.tokenUrl)
               }
-            }
-          })
-      }      
-      login.updateLoading(false).updateLogout(true)
+              else {
+                if (data.status) {
+                  var access = JSON.parse(JSON.stringify(param));
+                  access['expiration'] = data.text.expiresAt;
+                  window.localStorage.setItem('access', JSON.stringify(access));
+                }
+              }
+            })
+        }
+
+        login.updateLogout(true);
+      }
     })();
   </script>
 </body>
