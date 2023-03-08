@@ -24,13 +24,13 @@ var login_ = {
     addNewLogin(input) { this.new_login = input; return this },
     updateLoading(input) { this.loading = input; return this },
     updateLogout(input) {
-
-      var nav = document.getElementById('main_nav');
-      nav.classList.remove("d-none");
-
-      var logout_btn = document.getElementById('main_logout_btn');
-      logout_btn.addEventListener("click", function () { login.log_out() });
-      
+      if(input){
+        var nav = document.getElementById('main_nav');
+        nav.classList.remove("d-none");
+  
+        var logout_btn = document.getElementById('main_logout_btn');
+        logout_btn.addEventListener("click", function () { login.log_out() });
+      }
       this.logout = input;
       return this
     },
