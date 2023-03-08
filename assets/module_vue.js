@@ -1,4 +1,4 @@
-var alert_mod = {
+var alert_ = {
   data() {
     return {
       id:0,
