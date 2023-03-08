@@ -6,7 +6,7 @@ function updateUrl(url, param) {
       if (param[e] != '') { url = url + "=" + param[e] }
     });
   }
-  return url
+  return encodeURI(url)
 }
 
 function getAllUrlParams(url) {

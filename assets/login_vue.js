@@ -47,7 +47,7 @@ var login_ = {
     },
     auth() {
       var url = this.tokenUrl;
-      window.location.replace(url)
+      window.location.replace(encodeURI(url))
     },
     log_out() {
       this.loading = true;
@@ -64,7 +64,7 @@ var login_ = {
         .then(function (data) {
           if (data.status) {
             window.localStorage.clear();
-            window.location.replace(headUrl);
+            window.location.replace(encodeURI(headUrl));
           }
         });
     },
