@@ -166,6 +166,7 @@
               }
               else {
                 if (data.status) {
+                  console.log(data.text)
                   var access = JSON.parse(JSON.stringify(param));
                   access['expiration'] = data.text.expiresAt;
                   access['userid'] = data.text.usr_code;
