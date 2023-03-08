@@ -122,8 +122,7 @@
       param = getAllUrlParams();
       param['tenant'] = 'VEOLIA1_TST';
       param['logout'] = 'false';
-      param['url'] = headUrl;
-
+      
       if (store !== null) {
         store = JSON.parse(store);
         console.log((new Date(store['expiration'] * 1000) > new Date()))

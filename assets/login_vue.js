@@ -45,10 +45,6 @@ var login_ = {
       }
       else { window.location.replace(updateUrl(headUrl, param)) }
     },
-    auth() {
-      var url = this.tokenUrl;
-      window.location.replace(url)
-    },
     log_out() {
       this.loading = true;
       param['logout'] = 'true';
