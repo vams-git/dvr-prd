@@ -140,7 +140,25 @@
             })
           }, left);
         }
-        else { window.localStorage.clear() }
+        else {
+          param['logout'] = 'true';
+          param['email'] = store.email;
+          var log_out = new Request(updateUrl(login_gas, param), {
+            redirect: "follow",
+            method: 'POST',
+            headers: {
+              "Content-Type": "text/plain;charset=utf-8",
+            },
+          });
+          fetch(log_out)
+            .then(function (response) { return response.json() })
+            .then(function (data) {
+              if (data.status) {
+                window.localStorage.clear();
+                window.location.replace(encodeURI(headUrl));
+              }
+            });
+        }
       }
 
       if (param.email !== undefined && param.email !== null) {
