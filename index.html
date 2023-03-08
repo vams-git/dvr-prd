@@ -106,7 +106,7 @@
   <script>
 
     var param;
-    var gas = 'https://script.google.com/macros/s/AKfycbyxS-QxsOYTVyJXUh1R7i38sjxk1R4L8uMqfU5S2Yfc-u6HkTV_u1R7ZuWeIPcR7DvvgQ/exec';
+    var login_gas = 'https://script.google.com/macros/s/AKfycbyxS-QxsOYTVyJXUh1R7i38sjxk1R4L8uMqfU5S2Yfc-u6HkTV_u1R7ZuWeIPcR7DvvgQ/exec';
     var login = Vue.createApp(login_).mount('#login');
     var alert = Vue.createApp(alert_).mount('#alert');
     var store;
@@ -116,7 +116,7 @@
       var body = document.getElementById('main_body');
       body.style.display = null;
 
-      var store = window.localStorage.getItem('access');
+      store = window.localStorage.getItem('access');
       param = getAllUrlParams();
       param['tenant'] = 'VEOLIA1_TST';
       param['logout'] = 'false';
@@ -135,8 +135,8 @@
       if (param.email !== undefined && param.email !== null) {
         login.addNewLogin(false).addUserId(param.email)
       }
-      if (store == null && param.email !== undefined) {
-        var fetch_status = new Request(updateUrl(gas, param), {
+      if (store == null || store == undefined) && param.email !== undefined) {
+        var fetch_status = new Request(updateUrl(login_gas, param), {
           redirect: "follow",
           method: 'POST',
           headers: {

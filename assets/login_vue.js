@@ -35,7 +35,7 @@ var login_ = {
     log_out() {
       this.loading = true;
       param['logout'] = 'true';
-      var log_out = new Request(updateUrl(gas, param), {
+      var log_out = new Request(updateUrl(login_gas, param), {
         redirect: "follow",
         method: 'POST',
         headers: {
