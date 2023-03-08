@@ -56,8 +56,8 @@
       </ul>
     </div>
   </div>
-  <div id="login" class="hstack gap-2 vh-100 vw-100">
-    <div class="m-auto">
+  <div id="loader" v-show="loader" class="hstack gap-2 vh-100 vw-100">
+    <div id="login" class="m-auto">
       <form v-if="new_login" class="card-body p-2">
         <div class="vstack text-center gap-1 mb-5">
           <img src="https://afiqrostam.github.io/vams-checklist/icon.png" class="mx-auto mb-2 veolia-logo">
@@ -107,10 +107,14 @@
     var login_gas = 'https://script.google.com/macros/s/AKfycbyxS-QxsOYTVyJXUh1R7i38sjxk1R4L8uMqfU5S2Yfc-u6HkTV_u1R7ZuWeIPcR7DvvgQ/exec';
     var login = Vue.createApp(login_).mount('#login');
     var alert = Vue.createApp(alert_).mount('#alert');
+    var loader = Vue.createApp(alert_).mount('#loader');
     var store;
     var headUrl = origin + window.location.pathname;
 
     (function () {
+      var body = document.getElementById('main_body');
+      body.style.display = null;
+
       store = window.localStorage.getItem('access');
       param = getAllUrlParams();
       param['tenant'] = 'VEOLIA1_TST';
@@ -151,14 +155,14 @@
                   access['expiration'] = data.text.expiresAt;
                   window.localStorage.setItem('access', JSON.stringify(access));
                   login.updateLogout(true);
+                  loader.loader = true;
                 }
               }
             })
         }
-        else { login.updateLogout(true) }
+        else { login.updateLogout(true); loader.loader = true }
       }
-      var body = document.getElementById('main_body');
-      body.style.display = null;
+      else { loader.loader = true }
     })();
   </script>
 </body>
