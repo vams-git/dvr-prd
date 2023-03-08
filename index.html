@@ -165,6 +165,8 @@
               }
               else {
                 if (data.status) {
+                  
+                  console.log(data.text)
                   var access = JSON.parse(JSON.stringify(param));
                   access['expiration'] = data.text.expiresAt;
                   window.localStorage.setItem('access', JSON.stringify(access));
