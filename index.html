@@ -56,8 +56,8 @@
       </ul>
     </div>
   </div>
-  <div id="loader" v-show="loader" class="hstack gap-2 vh-100 vw-100">
-    <div id="login" class="m-auto">
+  <div id="login" class="hstack gap-2 vh-100 vw-100">
+    <div v-show="loader" class="m-auto">
       <form v-if="new_login" class="card-body p-2">
         <div class="vstack text-center gap-1 mb-5">
           <img src="https://afiqrostam.github.io/vams-checklist/icon.png" class="mx-auto mb-2 veolia-logo">
@@ -79,8 +79,7 @@
             <p type="email" class="text-center">{{email}}</p>
           </div>
           <div class="hstack mt-2">
-            <button v-if="logout" type="button" @click="log_out" class="m-auto btn btn-primary">Logout</button>
-            <button v-else type="button" @click="auth" class="m-auto btn btn-primary">Authorize</button>
+            <button type="button" @click="auth" class="m-auto btn btn-primary">Authorize</button>
           </div>
         </div>
       </div>
@@ -107,7 +106,6 @@
     var login_gas = 'https://script.google.com/macros/s/AKfycbyxS-QxsOYTVyJXUh1R7i38sjxk1R4L8uMqfU5S2Yfc-u6HkTV_u1R7ZuWeIPcR7DvvgQ/exec';
     var login = Vue.createApp(login_).mount('#login');
     var alert = Vue.createApp(alert_).mount('#alert');
-    var loader = Vue.createApp(alert_).mount('#loader');
     var store;
     var headUrl = origin + window.location.pathname;
 
@@ -134,8 +132,7 @@
 
       if (param.email !== undefined && param.email !== null) {
         login.addNewLogin(false)
-          .addUserId(param.email)
-          .updateLoading(false);
+          .addUserId(param.email);
 
         if (store == null || store == undefined) {
           var fetch_status = new Request(updateUrl(login_gas, param), {
@@ -146,8 +143,9 @@
           fetch(fetch_status)
             .then(function (response) { return response.json() })
             .then(function (data) {
+              login.updateLoading(false)
               if (!data.status && data.text.tokenUrl !== undefined) {
-                login.updateLoading(false).updateTokenUrl(data.text.tokenUrl)
+                login.updateTokenUrl(data.text.tokenUrl).updateLogout(false);
               }
               else {
                 if (data.status) {
@@ -155,14 +153,14 @@
                   access['expiration'] = data.text.expiresAt;
                   window.localStorage.setItem('access', JSON.stringify(access));
                   login.updateLogout(true);
-                  loader.loader = true;
                 }
               }
+              login.loader = true;
             })
         }
-        else { login.updateLogout(true); loader.loader = true }
+        else { login.updateLoading(false).updateLogout(true); login.loader = true }
       }
-      else { loader.loader = true }
+      else { login.loader = true }
     })();
   </script>
 </body>

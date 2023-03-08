@@ -6,7 +6,8 @@ var login_ = {
       new_login: true,
       loading: true,
       tokenUrl: '',
-      logout: false
+      logout: false,
+      loader: false
     }
   },
   watch: {

@@ -40,11 +40,3 @@ function getAllUrlParams(url) {
   }
   return obj;
 }
-
-var loader_ = {
-  data() {
-    return {
-      loader: false,
-    };
-  },
-};
