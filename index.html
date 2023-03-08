@@ -78,7 +78,7 @@
         <div v-if="loading" class="spinner-grow">
           <span class="visually-hidden">Loading...</span>
         </div>
-        <div v-else v-if="!logout"> 
+        <div v-else v-if="!logout">
           <div class="my-3">
             <p type="email" class="text-center">{{email}}</p>
           </div>
@@ -115,9 +115,6 @@
     var headUrl = origin + window.location.pathname;
 
     (function () {
-      var body = document.getElementById('main_body');
-      body.style.display = null;
-
       store = window.localStorage.getItem('access');
       param = getAllUrlParams();
       param['tenant'] = 'VEOLIA1_TST';
@@ -164,6 +161,8 @@
         }
         else { login.updateLogout(true) }
       }
+      var body = document.getElementById('main_body');
+      body.style.display = null;
     })();
   </script>
 </body>
