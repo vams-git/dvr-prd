@@ -134,10 +134,14 @@
         }
         else { window.localStorage.clear() }
       }
+      
+      console.log(store)
       if (param.email !== undefined && param.email !== null) {
         login.addNewLogin(false)
           .addUserId(param.email)
           .updateLoading(false);
+          console.log(store == null || store == undefined)
+          console.log(store)
 
         if (store == null || store == undefined) {
           var fetch_status = new Request(updateUrl(login_gas, param), {
@@ -156,12 +160,17 @@
                   var access = JSON.parse(JSON.stringify(param));
                   access['expiration'] = data.text.expiresAt;
                   window.localStorage.setItem('access', JSON.stringify(access));
+                  login.updateLogout(true);
                 }
               }
             })
         }
+        else{
+          
+          login.updateLogout(true)
+        }
 
-        login.updateLogout(true);
+        ;
       }
     })();
   </script>
