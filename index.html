@@ -126,6 +126,7 @@
 
       if (store !== null) {
         store = JSON.parse(store);
+        console.log((new Date(store['expiration'] * 1000) > new Date()))
         if (new Date(store['expiration'] * 1000) > new Date()) {
           var expired = new Date(store['expiration'] * 1000);
           var left = (expired - new Date()) - 300000;
