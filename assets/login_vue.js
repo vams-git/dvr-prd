@@ -22,7 +22,17 @@ var login_ = {
     addUserId(input) { this.email = input.toUpperCase(); return this },
     addNewLogin(input) { this.new_login = input; return this },
     updateLoading(input) { this.loading = input; return this },
-    updateLogout(input) { this.logout = input; return this },
+    updateLogout(input) {
+
+      var nav = document.getElementById('main_nav');
+      nav.classList.remove("d-none");
+
+      var logout_btn = document.getElementById('main_logout_btn');
+      logout_btn.addEventListener("click", function () { login.log_out() });
+      
+      this.logout = input;
+      return this
+    },
     updateTokenUrl(input) { this.tokenUrl = input; return this },
     getData() { console.log(Object.entries(this.$data)) },
     update() {
