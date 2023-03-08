@@ -165,10 +165,11 @@
               }
               else {
                 if (data.status) {
-                  
-                  console.log(data.text)
                   var access = JSON.parse(JSON.stringify(param));
                   access['expiration'] = data.text.expiresAt;
+                  param['userid'] = access['userid'] = data.text.usr_code;
+                  param['organization'] = access['organization'] = data.text.uog_org;
+                  param['name'] = access['name'] = data.text.usr_desc;
                   window.localStorage.setItem('access', JSON.stringify(access));
                   login.updateLogout(true);
                 }
