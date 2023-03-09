@@ -89,7 +89,7 @@
               in
               <span v-html="String(time).padStart(2, '0')+'s'"></span>.
             </p>
-            <a :href="tokenUrl" target="_top" :class="m-auto btn btn-primary [tokenUrl == ''? 'disabled' : '']">Authorize</a>
+            <a :href="tokenUrl" target="_top" :class="[tokenUrl == ''? 'm-auto btn btn-primary disabled' : 'm-auto btn btn-primary']">Authorize</a>
           </div>
         </div>
       </div>
