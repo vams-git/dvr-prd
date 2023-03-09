@@ -10,9 +10,7 @@ var login_ = {
       loader: false,
       time: 60,
       timer: null,
-      login_attempt: 0,
-      login_time: 1,
-      login_timer: null,
+      login_attempt: 0
     }
   },
   watch: {
