@@ -43,7 +43,7 @@ var timer_ = {
       if(selector){option}
       clearInterval(this.timer)
     },
-    start() { 
+    start(selector,option) { 
       if(selector === undefined){ selector = false }
       this.timer = setInterval(this.decrementOrAlert, 1000,selector,option);
      }
