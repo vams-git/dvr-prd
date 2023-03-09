@@ -83,13 +83,12 @@
           <div class="my-3">
             <p type="email" class="text-center">{{email}}</p>
           </div>
-          <div class="vstack mt-2">
-            <p class="col-6  mx-auto font-monospace">kindly open link in a incognito / private window.
-              link will expires
-              in
-              <span v-html="String(time).padStart(2, '0')+'s'"></span>.
+          <div class="vstack text-center mt-2">
+            <p class="small">kindly open link in a incognito / private window.<br>
+              link will expires in <span v-html="String(time).padStart(2, '0')+'s'"></span>.
             </p>
-            <a :href="tokenUrl" target="_top" :class="[tokenUrl == ''? 'm-auto btn btn-primary disabled' : 'm-auto btn btn-primary']">Authorize</a>
+            <a :href="tokenUrl" target="_top"
+              :class="[tokenUrl == ''? 'm-auto col-4 btn btn-primary disabled' : 'm-auto col-4 btn btn-primary']">Authorize</a>
           </div>
         </div>
       </div>
