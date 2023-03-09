@@ -167,7 +167,6 @@
               login.updateLoading(false)
               if (!data.status && data.text.tokenUrl !== undefined) {
                 login.updateTokenUrl(data.text.tokenUrl).updateLogout(false);
-                expiration.start(true,login.updateTokenUrl(''))
               }
               else {
                 if (data.status) {
