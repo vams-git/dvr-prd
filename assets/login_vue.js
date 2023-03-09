@@ -36,6 +36,9 @@ var login_ = {
       this.logout = input;
       return this
     },
+    reload(){
+      window.location.replace(headUrl)
+    },
     updateTokenUrl(input) { this.tokenUrl = input; return this },
     getData() { console.log(Object.entries(this.$data)) },
     update() {
