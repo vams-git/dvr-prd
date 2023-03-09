@@ -83,8 +83,12 @@
           <div class="my-3">
             <p type="email" class="text-center">{{email}}</p>
           </div>
-          <div class="hstack mt-2">
-            <a :href="tokenUrl" target="_top" class="m-auto btn btn-primary">Authorize</a>
+          <div class="vstack mt-2">
+            <p class="col-6  mx-auto font-monospace">kindly open link in a incognito / private window. link will expires
+              in
+              <span id="expiration" :v-html="String(this.time).padStart(2, '0')+'s'"></span>.
+            </p>
+            <a :href="tokenUrl" target="_top" class="m-auto btn btn-primary" :disabled="tokenUrl == ''">Authorize</a>
           </div>
         </div>
       </div>
@@ -111,6 +115,7 @@
     var login_gas = 'https://script.google.com/macros/s/AKfycbyxS-QxsOYTVyJXUh1R7i38sjxk1R4L8uMqfU5S2Yfc-u6HkTV_u1R7ZuWeIPcR7DvvgQ/exec';
     var login = Vue.createApp(login_).mount('#login');
     var alert = Vue.createApp(alert_).mount('#alert');
+    var expiration = Vue.createApp(timer_).mount('#expiration');
     var store;
     var headUrl = origin + window.location.pathname;
 
@@ -122,7 +127,7 @@
       param = getAllUrlParams();
       param['tenant'] = 'VEOLIA1_TST';
       param['logout'] = 'false';
-      
+
       if (store !== null) {
         store = JSON.parse(store);
         console.log((new Date(store['expiration'] * 1000) > new Date()))
@@ -162,6 +167,7 @@
               login.updateLoading(false)
               if (!data.status && data.text.tokenUrl !== undefined) {
                 login.updateTokenUrl(data.text.tokenUrl).updateLogout(false);
+                expiration.start(true,login.updateTokenUrl(''))
               }
               else {
                 if (data.status) {

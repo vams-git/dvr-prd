@@ -29,3 +29,23 @@ var alert_ = {
     }
   },
 };
+
+var timer_ = {
+  data() {
+    return {
+      time: 75, //in seconds
+      timer: null,
+    }
+  },
+  methods: {
+    decrementOrAlert(selector,option) {
+      if (this.time > 0) { this.time--; return }
+      if(selector){option}
+      clearInterval(this.timer)
+    },
+    start(selector,option) { 
+      if(selector === undefined){ selector = false }
+      this.timer = setInterval(this.decrementOrAlert, 1000,selector,option);
+     }
+  }
+};
