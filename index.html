@@ -79,7 +79,7 @@
         <div v-if="loading" class="spinner-grow">
           <span class="visually-hidden">Loading...</span>
         </div>
-        <template v-else v-if="!logout">
+        <div v-else v-if="!logout">
           <div class="vstack text-center gap-1 mb-2">
             <img src="https://afiqrostam.github.io/vams-checklist/icon.png" class="mx-auto mb-2 veolia-logo">
             <p class="mb-2 font-monospace lead">Daily Vehicle Report<br>(DVR)</p>
@@ -95,7 +95,7 @@
             <a :href="tokenUrl" target="_top"
               :class="[tokenUrl == ''? 'm-auto col-4 btn btn-primary disabled' : 'm-auto col-4 btn btn-primary']">Authorize</a>
           </div>
-        </template>
+        </div>
       </div>
     </div>
   </div>
