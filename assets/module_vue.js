@@ -43,7 +43,6 @@ var timer_ = {
       clearInterval(this.timer)
     },
     start() { 
-      if(selector === undefined){ selector = false }
       this.timer = setInterval();
      }
   }
