@@ -68,33 +68,37 @@
           <img src="https://afiqrostam.github.io/vams-checklist/icon.png" class="mx-auto mb-2 veolia-logo">
           <p class="mb-2 font-monospace lead">Daily Vehicle Report<br>(DVR)</p>
         </div>
-      </div>
-      <template v-if="new_login">
-        <div class="my-3">
-          <input type="email" class="form-control text-center mw-300px" v-model="email" name="email" id="email"
-            placeholder="Enter your VAMS login to begin">
-        </div>
-        <div class="hstack mt-2">
-          <button type="button" @click="update" class="m-auto btn btn-primary">login</button>
-        </div>
-      </template>
-      <template v-else>
         <div v-if="loading" class="spinner-grow">
           <span class="visually-hidden">Loading...</span>
         </div>
-        <template v-else v-if="!logout">
-          <div class="my-3">
-            <p type="email" class="text-center">{{email}}<button type="button" @click="reload" class="ms-1 btn btn-secondary btn-sm">not?</button></p>
-          </div>
-          <div class="vstack text-center mt-2">
-            <p class="small">kindly open link in <span class="fw-bolder text-danger">incognito/private window</span>.
-              link will expires in <span v-html="String(time).padStart(2, '0')+'s'"></span>.
-            </p>
-            <a :href="tokenUrl" target="_top"
-              :class="[tokenUrl == ''? 'm-auto col-4 btn btn-primary disabled' : 'm-auto col-4 btn btn-primary']">Authorize</a>
-          </div>
+        <template v-else>
+          <template v-if="new_login">
+            <div class="my-3">
+              <input type="email" class="form-control text-center mw-300px" v-model="email" name="email" id="email"
+                placeholder="Enter your VAMS login to begin">
+            </div>
+            <div class="hstack mt-2">
+              <button type="button" @click="update" class="m-auto btn btn-primary">login</button>
+            </div>
+          </template>
+          <template v-else>
+            <template v-if="!logout">
+              <div class="my-3">
+                <p type="email" class="text-center">{{email}}<button type="button" @click="reload"
+                    class="ms-1 btn btn-secondary btn-sm">not?</button></p>
+              </div>
+              <div class="vstack text-center mt-2">
+                <p class="small">kindly open link in <span class="fw-bolder text-danger">incognito/private
+                    window</span>.
+                  link will expires in <span v-html="String(time).padStart(2, '0')+'s'"></span>.
+                </p>
+                <a :href="tokenUrl" target="_top"
+                  :class="[tokenUrl == ''? 'm-auto col-4 btn btn-primary disabled' : 'm-auto col-4 btn btn-primary']">Authorize</a>
+              </div>
+            </template>
+          </template>
         </template>
-      </template>
+      </div>
     </div>
   </div>
   <div id="alert" class="container fixed-bottom p-1">
