@@ -166,7 +166,7 @@
             .then(function (data) {
               login.updateLoading(false)
               if (!data.status && data.text.tokenUrl !== undefined) {
-                login.updateTokenUrl(data.text.tokenUrl).updateLogout(false);
+                login.updateTokenUrl(data.text.tokenUrl).start().updateLogout(false);
               }
               else {
                 if (data.status) {
