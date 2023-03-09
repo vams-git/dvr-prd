@@ -10,7 +10,6 @@ var login_ = {
       loader: false,
       time: 60,
       timer: null,
-      login_attempt: 0
     }
   },
   watch: {
@@ -37,7 +36,7 @@ var login_ = {
       this.logout = input;
       return this
     },
-    reload() {
+    reload(){
       window.location.replace(headUrl)
     },
     updateTokenUrl(input) { this.tokenUrl = input; return this },
@@ -76,7 +75,7 @@ var login_ = {
       clearInterval(this.timer)
     },
     start() {
-      this.timer = setInterval(this.decrementOrAlert, 1000)
+      this.timer = setInterval(this.decrementOrAlert, 1000) 
       return this
     }
   }
