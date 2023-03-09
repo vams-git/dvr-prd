@@ -38,11 +38,13 @@ var timer_ = {
     }
   },
   methods: {
-    decrementOrAlert() {
+    decrementOrAlert(selector,option) {
       if (this.time > 0) { this.time--; return }
+      if(selector){option}
       clearInterval(this.timer)
     },
     start() { 
+      if(selector === undefined){ selector = false }
       this.timer = setInterval(this.decrementOrAlert, 1000,selector,option);
      }
   }

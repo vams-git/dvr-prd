@@ -84,9 +84,9 @@
             <p type="email" class="text-center">{{email}}</p>
           </div>
           <div class="vstack mt-2">
-            <p class="col-6  mx-auto font-monospace">kindly open link in a incognito / private window. link will expires
+            <p id="expiration" class="col-6  mx-auto font-monospace">kindly open link in a incognito / private window. link will expires
               in
-              <span id="expiration" :v-html="String(this.time).padStart(2, '0')+'s'"></span>.
+              <span v-html="String(this.time).padStart(2, '0')+'s'"></span>.
             </p>
             <a :href="tokenUrl" target="_top" class="m-auto btn btn-primary" :disabled="tokenUrl == ''">Authorize</a>
           </div>
@@ -167,6 +167,7 @@
               login.updateLoading(false)
               if (!data.status && data.text.tokenUrl !== undefined) {
                 login.updateTokenUrl(data.text.tokenUrl).updateLogout(false);
+                expiration.start(true,login.updateTokenUrl(''));
               }
               else {
                 if (data.status) {
