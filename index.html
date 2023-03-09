@@ -79,7 +79,7 @@
         <div v-if="loading" class="spinner-grow">
           <span class="visually-hidden">Loading...</span>
         </div>
-        <div v-else v-if="!logout">
+        <template v-else v-if="!logout">
           <div class="vstack text-center gap-1 mb-2">
             <img src="https://afiqrostam.github.io/vams-checklist/icon.png" class="mx-auto mb-2 veolia-logo">
             <p class="mb-2 font-monospace lead">Daily Vehicle Report<br>(DVR)</p>
@@ -95,7 +95,7 @@
             <a :href="tokenUrl" target="_top"
               :class="[tokenUrl == ''? 'm-auto col-4 btn btn-primary disabled' : 'm-auto col-4 btn btn-primary']">Authorize</a>
           </div>
-        </div>
+        </template>
       </div>
     </div>
   </div>
@@ -174,7 +174,6 @@
               }
               else {
                 if (data.status) {
-                  console.log(data.text)
                   var access = JSON.parse(JSON.stringify(param));
                   access['expiration'] = data.text.expiresAt;
                   access['userid'] = data.text.usr_code;
@@ -185,6 +184,7 @@
                   param['name'] = data.text.usr_desc;
                   window.localStorage.setItem('access', JSON.stringify(access));
                   login.updateLogout(true);
+                  window.location.replace(updateUrl(headUrl, param))
                 }
               }
               login.loader = true;
