@@ -53,34 +53,6 @@ var login_ = {
       }
       else { window.location.replace(updateUrl(headUrl, param)) }
     },
-    log_in() {
-      this.login_attempt++;
-      login.updateLoading(true)
-      var fetch_status = new Request(updateUrl(login_gas, param), {
-        redirect: "follow",
-        method: 'POST',
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-      });
-      fetch(fetch_status)
-        .then(function (response) { return response.json() })
-        .then(function (data) {
-          if (!data.status && data.text.tokenUrl !== undefined &&
-            this.login_attempt <= 5) { setInterval(this.log_in, 2000) }
-          else if (data.status) {
-            var access = JSON.parse(JSON.stringify(param));
-            access['expiration'] = data.text.expiresAt;
-            access['userid'] = data.text.usr_code;
-            param['userid'] = data.text.usr_code;
-            access['organization'] = data.text.uog_org;
-            param['organization'] = data.text.uog_org;
-            access['name'] = data.text.usr_desc;
-            param['name'] = data.text.usr_desc;
-            window.localStorage.setItem('access', JSON.stringify(access));
-            window.location.replace(updateUrl(headUrl, param))
-          }
-          else { window.location.replace(updateUrl(headUrl, param)) }
-        })
-    },
     log_out() {
       this.loading = true;
       param['logout'] = 'true';
