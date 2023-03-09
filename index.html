@@ -84,7 +84,7 @@
             <p type="email" class="text-center">{{email}}</p>
           </div>
           <div class="vstack text-center mt-2">
-            <p class="small">kindly open link in a incognito / private window.<br>
+            <p class="small">kindly open link in <span class="fw-bolder text-danger">incognito/private window</span>.
               link will expires in <span v-html="String(time).padStart(2, '0')+'s'"></span>.
             </p>
             <a :href="tokenUrl" target="_top"
