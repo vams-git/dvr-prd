@@ -29,21 +29,3 @@ var alert_ = {
     }
   },
 };
-
-var timer_ = {
-  data() {
-    return {
-      time: 60, //in seconds
-      timer: null,
-    }
-  },
-  methods: {
-    decrementOrAlert() {
-      if (this.time > 0) { this.time--; return }
-      clearInterval(this.timer)
-    },
-    start() { 
-      this.timer = setInterval();
-     }
-  }
-};

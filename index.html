@@ -84,7 +84,7 @@
             <p type="email" class="text-center">{{email}}</p>
           </div>
           <div class="vstack mt-2">
-            <p id="expiration" class="col-6  mx-auto font-monospace">kindly open link in a incognito / private window.
+            <p class="col-6  mx-auto font-monospace">kindly open link in a incognito / private window.
               link will expires
               in
               <span v-html="String(this.time).padStart(2, '0')+'s'"></span>.
@@ -116,7 +116,6 @@
     var login_gas = 'https://script.google.com/macros/s/AKfycbyxS-QxsOYTVyJXUh1R7i38sjxk1R4L8uMqfU5S2Yfc-u6HkTV_u1R7ZuWeIPcR7DvvgQ/exec';
     var login = Vue.createApp(login_).mount('#login');
     var alert = Vue.createApp(alert_).mount('#alert');
-    var expiration;
     var store;
     var headUrl = origin + window.location.pathname;
 
@@ -167,8 +166,6 @@
             .then(function (data) {
               login.updateLoading(false)
               if (!data.status && data.text.tokenUrl !== undefined) {
-
-                expiration = Vue.createApp(timer_).mount('#expiration');
                 login.updateTokenUrl(data.text.tokenUrl).updateLogout(false);
               }
               else {

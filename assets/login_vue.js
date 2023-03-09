@@ -7,7 +7,9 @@ var login_ = {
       loading: true,
       tokenUrl: '',
       logout: false,
-      loader: false
+      loader: false,
+      time: 60,
+      timer: null,
     }
   },
   watch: {
@@ -24,10 +26,10 @@ var login_ = {
     addNewLogin(input) { this.new_login = input; return this },
     updateLoading(input) { this.loading = input; return this },
     updateLogout(input) {
-      if(input){
+      if (input) {
         var nav = document.getElementById('main_nav');
         nav.classList.remove("d-none");
-  
+
         var logout_btn = document.getElementById('main_logout_btn');
         logout_btn.addEventListener("click", function () { login.log_out() });
       }
@@ -64,5 +66,14 @@ var login_ = {
           }
         });
     },
+    decrementOrAlert() {
+      if (this.time > 0) { this.time--; return }
+      this.updateTokenUrl('');
+      clearInterval(this.timer)
+    },
+    start() {
+      this.timer = setInterval(this.decrementOrAlert, 1000) 
+      return this
+    }
   }
 }
