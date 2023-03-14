@@ -1,8 +1,8 @@
 var alert_ = {
   data() {
     return {
-      id:0,
-      datas: [],
+      id: 0,
+      datas: []
     };
   },
   methods: {
@@ -22,10 +22,8 @@ var alert_ = {
       });
     },
     remove(id) {
-      var index = this.datas.findIndex(
-        function (e) { return e.id === id });
+      var index = this.datas.findIndex(function (e) { return e.id === id });
       var removed = this.datas.splice(index, 1)
-      console.log(removed)
     }
-  },
+  }
 };
