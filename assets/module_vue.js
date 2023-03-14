@@ -27,3 +27,21 @@ var alert_ = {
     }
   }
 };
+
+var user_ = {
+  data() {
+    return {
+      'tenant': '',
+      'logout': '',
+      'email': '',
+      'userid': '',
+      'organization': '',
+      'name': ''
+    };
+  },
+  methods: {
+    getData() {
+      return Object.entries(this.$data)
+    }
+  }
+};
