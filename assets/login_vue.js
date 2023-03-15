@@ -25,32 +25,53 @@ var login_ = {
   },
   methods: {
     addUserId(input) {
-      if (input.toLowerCase().match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/) == null) {
+      if (input.toString().toLowerCase().match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/) == null) {
         alert.add({
           text: 'invalid email',
           type: 'error'
-        })
-      } else {
-        this.email = input.toUpperCase();
+        });
+        return false
       }
+      else { this.email = input.toUpperCase(); return true }
+    },
+    addNewLogin(input) {
+      if (this.addUserId(input)) { this.new_login = false }
+      else { this.new_login = true }
       return this
     },
-    addNewLogin(input) { this.new_login = input; return this },
+    requestNewLogin() { this.loader = true; return this },
+    loadSessionData() {
+      this.loader = true;
+      this.loading = false;
+      return this
+    },
     updateLoading(input) { this.loading = input; return this },
     updateLogout(input) {
       var nav = document.getElementById('main_nav');
+      var login_page = document.getElementById('login');
+      var header = document.getElementById('header');
       var logout_btn = document.getElementById('main_logout_btn');
       if (input) {
         nav.classList.remove("d-none");
+        header.classList.remove("d-none");
+        login_page.classList.add("d-none");
         logout_btn.addEventListener("click", function () { login.log_out() });
       }
-      else { nav.classList.add("d-none") }
+      else {
+        nav.classList.add("d-none");
+        header.classList.add("d-none");
+        login_page.classList.remove("d-none");
+      }
       this.loader = false;
       this.logout = input;
       return this
     },
     reload() { window.location.replace(headUrl) },
-    updateTokenUrl(input) { this.tokenUrl = input; return this },
+    updateTokenUrl(input) {
+      this.tokenUrl = input;
+      this.updateLoading(false);
+      return this
+    },
     getData() { console.log(Object.entries(this.$data)) },
     update() {
       if (this.email.toLowerCase().match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/) == null) {
@@ -88,7 +109,7 @@ var login_ = {
             window.location.replace(updateUrl(headUrl, param))
           }
           else {
-            if (login.auth_attempts <= 5) { login.log_in() }
+            if (login.auth_attempts <= 5) { setInterval(login.log_in(), 1000) }
             else { window.location.replace(encodeURI(headUrl)) }
           }
         })

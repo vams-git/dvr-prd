@@ -7,21 +7,60 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <title>Veolia DVR</title>
-  <link rel="apple-touch-icon" href="https://afiqrostam.github.io/vams-checklist/icon.png" size="64x64" type="image/png">
   <link rel="icon" href="https://afiqrostam.github.io/vams-checklist/icon.png" size="64x64" type="image/png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
   <style>
-    .veolia-logo { max-width: 100px }
-    .nav-icon { max-width: 24px }
-    .mw-300px { min-width: 300px }
+    .veolia-logo {
+      max-width: 100px
+    }
+
+    .nav-icon {
+      max-width: 24px
+    }
+
+    .mw-300px {
+      min-width: 300px
+    }
   </style>
 </head>
 
 <body id="main_body" class="bg-light" style="display:none!important">
+  <div class="modal fade" id="search" tabindex="-1" aria-labelledby="search" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5">Equipment Search</h1>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <input type="text" class="form-control" @input="getList" v-model="search" placeholder="search here..">
+          </div>
+          <div v-if="org_list.length > 1" class="mb-3">
+            <template v-for="(item,index) in org_list">
+              <input type="checkbox" class="btn-check" @change="getList" :value="item" v-model="org" :id="item"
+                autocomplete="off" checked="">
+              <label class="btn btn-sm btn-secondary me-1" :for="item">{{item}}</label>
+            </template>
+          </div>
+          <div class="list-group">
+            <button v-if="filtered_list.length == 0" class="list-group-item list-group-item-action disable"
+              type="button">
+              equipment not found
+            </button>
+            <button v-for="(item,index) in filtered_list" data-bs-dismiss="modal"
+              class="list-group-item list-group-item-action hstack gap-2" @click="process(item)" type="button">
+              {{item.text}}
+              <span class="badge bg-dark bg-opacity-50 ms-auto d-none d-sm-block">{{ item.obj_org }}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="main_nav" class="container-fluid bg-secondary d-none bg-opacity-25 p-2  hstack gap-2 fixed-top">
     <div id="user_info" class="flex-fill small hstack gap-2">
-      <img src="https://afiqrostam.github.io/vams-checklist/icon.png" class="nav-icon">
-      <i class="d-none d-sm-block">{{tenant}}/{{userid}}/{{organization}}</i>
+      <img src="https://afiqrostam.github.io/vams-checklist/icon.png" class="d-none d-sm-block nav-icon">
+      <i class="d-none d-sm-block">{{tenant}}/{{userid}}/{{org}}</i>
       <i class="ms-auto fs-6">Welcome back, {{name}}</i>
     </div>
     <div class="dropdown">
@@ -30,12 +69,8 @@
       </button>
       <ul class="dropdown-menu">
         <li>
-          <a class="dropdown-item disabled d-none" href="#" id="openjobmodalbutton" data-bs-toggle="modal"
-            data-bs-target="#newPage">
-            <span class="hstack gap-2">
-              Open Faults&nbsp;
-              <span class="badge text-bg-dark" id="openjobmodalcount">&nbsp;</span>
-            </span>
+          <a class="dropdown-item disabled" href="#" id="new_dvr_btn" data-bs-toggle="modal" data-bs-target="#search">
+            <span class="hstack gap-2"><i class="bi bi-file-earmark-plus-fill"></i>new DVR</span>
           </a>
         </li>
         <li>
@@ -81,7 +116,7 @@
         <div v-else class="card-body p-2">
           <div v-if="loading" class="vstack loading gap-2">
             <div class=" m-auto spinner-grow"></div>
-            <p class="small" v-html="updateHTML(auth_message)"></p>
+            <p class="small text-center" v-html="updateHTML(auth_message)"></p>
           </div>
           <template v-else>
             <template v-if="!logout">
@@ -94,11 +129,13 @@
                     class="ms-1 btn btn-secondary btn-sm">not?</button></p>
               </div>
               <div class="vstack text-center my-2">
-                <p class="small">kindly open link in <span class="fw-bolder text-danger">incognito/private
+                <p class="small">Kindly open link in <span class="fw-bolder text-danger">incognito/private
                     window</span>.
-                  link will expires in <span v-html="String(time).padStart(2, '0')+'s'"></span>.
+                  link will expires in <span class="fw-bolder text-primary"
+                    v-html="String(time).padStart(2, '0')"></span>s.
+                  <br><span> Page will attempt to fetch authentication after the link expires.</span>
                 </p>
-                <a :href="tokenUrl" target="_top"
+                <a :href="tokenUrl" target="_blank"
                   :class="[tokenUrl == ''? 'm-auto col-4 btn btn-primary disabled' : 'm-auto col-4 btn btn-primary']">Authorize</a>
               </div>
             </template>
@@ -107,7 +144,56 @@
       </div>
     </template>
   </div>
+  <div id="loader" class="vh-100 vw-100 d-flex d-none">
+    <div v-if="loader" class="m-auto">
+      <div class="spinner-grow" role="status"><span class="visually-hidden">Loading...</span> </div>
+    </div>
+  </div>
   <div id="header" class="container-fluid py-5 d-none"></div>
+  <div id="unfinished" class="col-lg-8 container-lg d-none">
+    <div class="display-6 mb-3 border-dark border-2 rounded-end d-block w-100 border-bottom">Open DVR</div>
+    <div class="row g-2">
+      <div class="col-6 col-sm-4 col-md-3">
+        <div class="card border-secondary">
+          <div class="card-header ">
+          </div>
+          <div class="card-body ">
+            <p class="fw-bolder">10-MAR-2023</p>
+            <p class="text-break">25242_TruckFL_Volvo_FM9_8x4 (CD59FP)</p>
+            <a href="#" class="btn btn-sm w-100 btn-outline-secondary">Post-Trip</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-3">
+        <div class="card border-secondary">
+          <div class="card-header ">
+          </div>
+          <div class="card-body ">
+            <p class="fw-bolder">10-MAR-2023</p>
+            <p class="text-break">25242_TruckFL_Volvo_FM9_8x4 (CD59FP)</p>
+            <a href="#" class="btn btn-sm w-100 btn-outline-secondary">Post-Trip</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-6 col-sm-4 col-md-3">
+        <div class="card border-info">
+          <div class="card-header text-bg-info bg-opacity-50">
+          </div>
+          <div class="card-body ">
+            <p class="card-text placeholder-glow text-info"><span class="placeholder col-7"></span></p>
+            <p class="card-text placeholder-glow text-info">
+              <span class="placeholder col-6"></span>
+              <span class="placeholder col-3"></span>
+              <span class="placeholder col-1"></span>
+              <span class="placeholder col-8"></span>
+            </p>
+            <button class="btn btn-sm w-100 btn-outline-info" type="button" data-bs-toggle="modal"
+              data-bs-target="#search">New DVR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="alert" class="container-fluid fixed-top vstack gap-2 mt-5">
     <div :id="data.id" v-for="data in datas" :key="data.id"
       v-bind="{ 'class': 'alert alert-dismissible fade show pre-line mx-auto col-12 col-xl-6 bg-opacity-25 '+data.classfix }">
@@ -130,9 +216,12 @@
     var login = Vue.createApp(login_).mount('#login');
     var alert = Vue.createApp(alert_).mount('#alert');
     var user_nav = Vue.createApp(user_).mount('#user_info');
+    var loader = Vue.createApp(loader_).mount('#loader');
+    var search = Vue.createApp(search_).mount('#search');
     var user_details = {};
     var store;
     var headUrl = origin + window.location.pathname;
+    var equipment_list = [];
 
     (function () {
       var body = document.getElementById('main_body');
@@ -170,10 +259,37 @@
         }
       }
 
-      if (param.email !== undefined && param.email !== null) {
-        login.addNewLogin(false).addUserId(param.email);
+      if (param.email === undefined || param.email === null) { login.requestNewLogin() }
+      else {
+        login.addNewLogin(param.email);
 
-        if (store == null || store == undefined) {
+        if (store !== null) {
+          Object.keys(store).forEach(
+            function (e) {
+              user_details[e] = store[e];
+              user_nav[e] = store[e];
+            });
+          login.loadSessionData().updateLogout(true);
+          loader.startLoader();
+          var fetch_data = new Request(login_gas + '?process=get_equipment_details&tenant=' + param.tenant + '&userid=' + param.userid + '&org=' + param.org + '&query=', {
+            redirect: "follow",
+            method: 'POST',
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+          });
+          fetch(fetch_data)
+            .then(function (response) { return response.json() })
+            .then(function (data) {
+              if (data.status) {
+                equipment_list = data.text;
+                search.list = equipment_list;
+                search.org_list = user_details.org_list;
+                search.org.push(user_details.org);
+                document.getElementById('new_dvr_btn').classList.remove('disabled');
+                loader.stopLoader();
+              }
+            });
+        }
+        else {
           var fetch_status = new Request(updateUrl(login_gas, param), {
             redirect: "follow",
             method: 'POST',
@@ -182,11 +298,7 @@
           fetch(fetch_status)
             .then(function (response) { return response.json() })
             .then(function (data) {
-              console.log(data)
-              login.updateLoading(false);
-
               if (data.status) {
-                login.loader = true;
                 var access = JSON.parse(JSON.stringify(param));
                 access['exp'] = data.text.expiresAt;
                 access['userid'] = data.text.usr_code;
@@ -209,31 +321,22 @@
                     param['tenant'] = data.text['tenant'];
                     window.location.replace(updateUrl(headUrl, param));
                   }
-                  login.updateTokenUrl(data.text.tokenUrl).start().updateLogout(false);
-                  login.loader = true
+                  else { login.updateTokenUrl(data.text.tokenUrl).start().updateLogout(false) }
+                  login.loader = true;
                 }
                 else {
-                  login.updateLoading(true).addNewLogin(true);
                   alert.add({
                     text: data.text,
                     type: 'error'
                   });
-                  setTimeout(function () { window.location.replace(headUrl) }, 5000);
+                  login.auth_message = 'redirecting..';
+                  login.loader = true;
+                  setTimeout(function () { window.location.replace(headUrl) }, 3000);
                 }
               }
             })
         }
-        else {
-          login.updateLoading(false).updateLogout(true);
-          Object.keys(store).forEach(
-            function (e) {
-              user_details[e] = store[e];
-              user_nav[e] = store[e];
-            });
-          login.loader = true
-        }
       }
-      else { login.loader = true }
     })();
   </script>
 </body>

@@ -45,3 +45,57 @@ var user_ = {
     }
   }
 };
+
+var loader_ = {
+  data() { return { 'loader': false } },
+  methods: {
+    startLoader() {
+      this.loader = true;
+      document.getElementById('header').classList.add("d-none");
+      document.getElementById('unfinished').classList.add("d-none");
+      document.getElementById('loader').classList.remove("d-none");
+    },
+    stopLoader() {
+      this.loader = false;
+      document.getElementById('header').classList.remove("d-none");
+      document.getElementById('unfinished').classList.remove("d-none");
+      document.getElementById('loader').classList.add("d-none");
+    }
+  }
+};
+
+var search_ = {
+  data() {
+    return {
+      'search': '',
+      'list': [],
+      'org': [],
+      'org_list': [],
+      'filtered_list': []
+    }
+  },
+  methods: {
+    getList() {
+      var input = this.search;
+      if (input === '') { this.filtered_list = []; return }
+
+      var search = this.list.filter(function (e) { return e });
+      if (this.org.length > 0) {
+        var org_list = this.org
+        search = search.filter(function (e) { return org_list.indexOf(e.obj_org) !== -1 })
+      }
+      var get_equipment = search.filter(
+        function (e) { return (Object.values(e).join(' ')).search(new RegExp(input, 'gi')) !== -1 }).map(
+          function (e) { return { 'obj_code': e.obj_code, 'obj_org': e.obj_org, 'text': e.obj_desc + ' (' + e.obj_udfchar39 + ')' } }).filter(
+            function (e, i) { return i < 15 });
+      this.filtered_list = get_equipment; return
+    },
+    process(data) {
+      console.log(data.obj_org);
+      console.log(data.obj_code);
+      loader.startLoader()
+      setInterval(function(){loader.stopLoader()}, 3000)
+
+    }
+  }
+};
