@@ -150,49 +150,44 @@
     </div>
   </div>
   <div id="header" class="container-fluid py-5 d-none"></div>
-  <div id="unfinished" class="col-lg-8 container-lg d-none">
-    <div class="display-6 mb-3 border-dark border-2 rounded-end d-block w-100 border-bottom">Open DVR</div>
-    <div class="row g-2">
-      <div class="col-6 col-sm-4 col-md-3">
-        <div class="card border-secondary">
-          <div class="card-header ">
+  <div id="open_dvr" class="col-lg-8 container-lg d-none">
+    <template v-if="open">
+      <div class="display-6 mb-3 border-dark rounded-end d-block w-100 border-bottom">Open DVR</div>
+      <div class="row g-2">
+        <div v-for="(item,index) in getList()" class="col-6 col-sm-4 col-md-3">
+          <div class="card">
+            <div class="card-header ">
+            </div>
+            <div class="card-body ">
+              <p class="fw-bolder">{{item.date}}</p>
+              <p class="text-break">{{item.text}}</p>
+              <button type="button" class="btn btn-sm w-100 btn-outline-secondary">{{item.status}}</a>
+            </div>
           </div>
-          <div class="card-body ">
-            <p class="fw-bolder">10-MAR-2023</p>
-            <p class="text-break">25242_TruckFL_Volvo_FM9_8x4 (CD59FP)</p>
-            <a href="#" class="btn btn-sm w-100 btn-outline-secondary">Post-Trip</a>
+        </div>
+        <div class="col-6 col-sm-4 col-md-3">
+          <div class="card border-info">
+            <div class="card-header text-bg-info bg-opacity-50">
+            </div>
+            <div class="card-body ">
+              <p class="card-text placeholder-glow text-info"><span class="placeholder col-7"></span></p>
+              <p class="card-text placeholder-glow text-info">
+                <span class="placeholder col-6"></span>
+                <span class="placeholder col-3"></span>
+                <span class="placeholder col-1"></span>
+                <span class="placeholder col-8"></span>
+              </p>
+              <button class="btn btn-sm w-100 btn-outline-info" type="button" data-bs-toggle="modal"
+                data-bs-target="#search">New DVR</button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-6 col-sm-4 col-md-3">
-        <div class="card border-secondary">
-          <div class="card-header ">
-          </div>
-          <div class="card-body ">
-            <p class="fw-bolder">10-MAR-2023</p>
-            <p class="text-break">25242_TruckFL_Volvo_FM9_8x4 (CD59FP)</p>
-            <a href="#" class="btn btn-sm w-100 btn-outline-secondary">Post-Trip</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-6 col-sm-4 col-md-3">
-        <div class="card border-info">
-          <div class="card-header text-bg-info bg-opacity-50">
-          </div>
-          <div class="card-body ">
-            <p class="card-text placeholder-glow text-info"><span class="placeholder col-7"></span></p>
-            <p class="card-text placeholder-glow text-info">
-              <span class="placeholder col-6"></span>
-              <span class="placeholder col-3"></span>
-              <span class="placeholder col-1"></span>
-              <span class="placeholder col-8"></span>
-            </p>
-            <button class="btn btn-sm w-100 btn-outline-info" type="button" data-bs-toggle="modal"
-              data-bs-target="#search">New DVR</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    </template>
+  </div>
+  <div id="checklist_dvr" class="col-lg-8 container-lg d-none">
+    <template v-if="open">
+    </template>
   </div>
   <div id="alert" class="container-fluid fixed-top vstack gap-2 mt-5">
     <div :id="data.id" v-for="data in datas" :key="data.id"
@@ -218,10 +213,12 @@
     var user_nav = Vue.createApp(user_).mount('#user_info');
     var loader = Vue.createApp(loader_).mount('#loader');
     var search = Vue.createApp(search_).mount('#search');
+    var open_dvr = Vue.createApp(open_dvr_).mount('#open_dvr');
     var user_details = {};
     var store;
     var headUrl = origin + window.location.pathname;
     var equipment_list = [];
+    var loader_queue = [];
 
     (function () {
       var body = document.getElementById('main_body');
@@ -270,24 +267,14 @@
               user_nav[e] = store[e];
             });
           login.loadSessionData().updateLogout(true);
-          loader.startLoader();
-          var fetch_data = new Request(login_gas + '?process=get_equipment_details&tenant=' + param.tenant + '&userid=' + param.userid + '&org=' + param.org + '&query=', {
-            redirect: "follow",
-            method: 'POST',
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-          });
-          fetch(fetch_data)
-            .then(function (response) { return response.json() })
-            .then(function (data) {
-              if (data.status) {
-                equipment_list = data.text;
-                search.list = equipment_list;
-                search.org_list = user_details.org_list;
-                search.org.push(user_details.org);
-                document.getElementById('new_dvr_btn').classList.remove('disabled');
-                loader.stopLoader();
-              }
-            });
+          search.init(loader, login_gas, param, user_details);
+          if (param['DVR'] === undefined) {
+            if (param['open_dvr'] === undefined) {
+              param['open_dvr'] = true;
+              window.location.replace(updateUrl(headUrl, param));
+            }
+            else { open_dvr.init(loader, login_gas, param) }
+          }
         }
         else {
           var fetch_status = new Request(updateUrl(login_gas, param), {
